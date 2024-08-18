@@ -50,6 +50,7 @@ router.get(
 router.get(
     '/auth/google/logout',
     (req, res) => {
+        req.logout();
         if (err) {
             return next(err);
         }
