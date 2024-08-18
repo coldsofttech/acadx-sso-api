@@ -7,6 +7,7 @@ const googleRoutes = require('./services/google/google');
 const linkedInRoutes = require('./services/linkedin/linkedin');
 const facebookRouters = require('./services/facebook/facebook');
 const microsoftRouters = require('./services/microsoft/microsoft');
+const githubRouters = require('./services/github/github');
 const port = process.env.PORT || 3002;
 
 const app = express();
@@ -28,6 +29,7 @@ app.use(googleRoutes);
 app.use(linkedInRoutes);
 app.use(facebookRouters);
 app.use(microsoftRouters);
+app.use(githubRouters);
 
 app.listen(port, () => {
     console.log(`AcadX SSO API running on http://localhost:${port}`)
