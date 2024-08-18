@@ -1,6 +1,15 @@
+require('dotenv').config();
+
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const passport = require('passport');
 const LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
+
+const limiter = rateLimit({
+    windowMs: process.env.RATE_LIMIT_WINDOWMS,
+    max: process.env.RATE_LIMIT_MAX_IPS,
+    message: process.env.RATE_LIMIT_ERROR_MESSAGE
+});
 
 passport.serializeUser((user, done) => {
     done(null, user);
@@ -52,6 +61,7 @@ router.get(
 
 router.get(
     '/auth/linkedin/user',
+    limiter,
     (req, res) => {
         if (req.isAuthenticated()) {
             res.send(req.user);

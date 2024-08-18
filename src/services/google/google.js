@@ -1,6 +1,15 @@
+require('dotenv').config();
+
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+
+const limiter = rateLimit({
+    windowMs: process.env.RATE_LIMIT_WINDOWMS,
+    max: process.env.RATE_LIMIT_MAX_IPS,
+    message: process.env.RATE_LIMIT_ERROR_MESSAGE
+});
 
 passport.serializeUser((user, done) => {
     done(null, user);
@@ -51,6 +60,7 @@ router.get(
 
 router.get(
     '/auth/google/user',
+    limiter,
     (req, res) => {
         if (req.isAuthenticated()) {
             res.send(req.user);
