@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const passport = require('passport');
-const LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
 
 const limiter = rateLimit({
     windowMs: process.env.RATE_LIMIT_WINDOWMS,
@@ -20,12 +20,12 @@ passport.deserializeUser((user, done) => {
 });
 
 passport.use(
-    new LinkedInStrategy(
+    new FacebookStrategy(
         {
-            clientID: process.env.LINKEDIN_CLIENT_ID,
-            clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
-            callbackURL: '/auth/linkedin/callback',
-            scope: ['r_emailaddress', 'r_liteprofile']
+            clientID: process.env.FACEBOOK_CLIENT_ID,
+            clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+            callbackURL: '/auth/facebook/callback',
+            profileFields: ['id', 'emails', 'name']
         },
         (accessToken, refreshToken, profile, done) => {
             return done(null, profile);
@@ -36,20 +36,20 @@ passport.use(
 const router = express.Router();
 
 router.get(
-    '/auth/linkedin',
-    passport.authenticate('linkedin', { state: true })
+    '/auth/facebook',
+    passport.authenticate('facebook', { scope: [ 'email' ]})
 );
 
 router.get(
-    '/auth/linkedin/callback',
-    passport.authenticate('linkedin', { failureRedirect: '/' }),
+    '/auth/facebook/callback',
+    passport.authenticate('facebook', { failureRedirect: '/' }),
     (req, res) => {
         res.redirect(process.env.REDIRECT_URL);
     }
 );
 
 router.get(
-    '/auth/linkedin/logout',
+    '/auth/facebook/logout',
     (req, res) => {
         req.logout();
         if (err) {
@@ -61,7 +61,7 @@ router.get(
 );
 
 router.get(
-    '/auth/linkedin/user',
+    '/auth/facebook/user',
     limiter,
     (req, res) => {
         if (req.isAuthenticated()) {
