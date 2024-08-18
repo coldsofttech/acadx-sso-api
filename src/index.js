@@ -6,6 +6,7 @@ const passport = require('passport');
 const googleRoutes = require('./services/google/google');
 const linkedInRoutes = require('./services/linkedin/linkedin');
 const facebookRouters = require('./services/facebook/facebook');
+const microsoftRouters = require('./services/microsoft/microsoft');
 const port = process.env.PORT || 3002;
 
 const app = express();
@@ -26,6 +27,7 @@ app.use(passport.session());
 app.use(googleRoutes);
 app.use(linkedInRoutes);
 app.use(facebookRouters);
+app.use(microsoftRouters);
 
 app.listen(port, () => {
     console.log(`AcadX SSO API running on http://localhost:${port}`)
