@@ -1,1 +1,1 @@
-# acadx-sso-google-api
+# acadx-sso-api
